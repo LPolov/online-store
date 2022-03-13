@@ -75,4 +75,14 @@ public class UserService implements UserDetailsService {
     user.setEnabled(true);
     repository.save(user);
   }
+
+//  public boolean isEmailRegistered(String email) {
+//    Optional<User> user = repository.findByEmail(email);
+//    return user.isPresent();
+//  }
+//
+//  public boolean isPasswordCorrect(String email) {
+//    Optional<User> user = repository.findByEmail(email);
+//    return user.isPresent();
+//  }
 }

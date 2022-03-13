@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @AllArgsConstructor
@@ -28,7 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
           .permitAll()
         .anyRequest()
         .authenticated().and()
-        .formLogin();
+        .formLogin()
+        .loginPage("/api/auth/sign-in")
+        .usernameParameter("email")
+        .failureUrl("/api/auth/sign-in/error")
+        .permitAll();
   }
 
   @Override
