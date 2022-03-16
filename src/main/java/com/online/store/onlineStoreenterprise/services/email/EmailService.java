@@ -30,7 +30,7 @@ public class EmailService implements EmailSender{
       helper.setTo(to);
       helper.setSubject(EMAIL_SUBJECT);
       helper.setFrom(FROM);
-      sender.send(mimeMessage);
+      //TODO: sender.send(mimeMessage);
     } catch (MessagingException e) {
       LOGGER.error("Failed to send email", e);
       throw new IllegalStateException("Failed to send email");
