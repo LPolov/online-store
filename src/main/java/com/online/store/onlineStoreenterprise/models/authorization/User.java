@@ -1,6 +1,6 @@
 package com.online.store.onlineStoreenterprise.models.authorization;
 
-import com.online.store.onlineStoreenterprise.dto.UserRegistrationRequest;
+import com.online.store.onlineStoreenterprise.dto.RegistrationRequest;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,6 @@ import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,7 +35,7 @@ public class User implements UserDetails {
   private Boolean locked;
   private Boolean enabled;
 
-  public User(UserRegistrationRequest request, UserRole role) {
+  public User(RegistrationRequest request, UserRole role) {
     firstName = request.getFirstName();
     lastName = request.getLastName();
     email = request.getEmail();
