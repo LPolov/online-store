@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/api/auth/sign-in")
+@RequestMapping("api/auth/sign-in")
 @AllArgsConstructor
 public class LoginController {
 

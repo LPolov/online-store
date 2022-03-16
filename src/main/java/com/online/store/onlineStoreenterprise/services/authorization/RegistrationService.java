@@ -5,14 +5,10 @@ import com.online.store.onlineStoreenterprise.models.authorization.ConfirmationT
 import com.online.store.onlineStoreenterprise.models.authorization.User;
 import com.online.store.onlineStoreenterprise.models.authorization.UserRole;
 import com.online.store.onlineStoreenterprise.services.email.EmailService;
-import com.online.store.onlineStoreenterprise.validation.exceptions.EmailAlreadyConfirmedException;
-import com.online.store.onlineStoreenterprise.validation.exceptions.InvalidEmailException;
-import com.online.store.onlineStoreenterprise.validation.exceptions.TokenAlreadyInUseException;
-import com.online.store.onlineStoreenterprise.validation.exceptions.ExpiredTokenException;
-import com.online.store.onlineStoreenterprise.validation.validators.EmailValidator;
+import com.online.store.onlineStoreenterprise.validation.exceptions.*;
+import com.online.store.onlineStoreenterprise.validation.validators.RegistrationRequestValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
@@ -20,20 +16,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RegistrationService {
 
-  private final EmailValidator emailValidator;
+  private static final String LINK = "http://localhost:8080/api/auth/sign-up/confirm?token=";
+
+  private final RegistrationRequestValidator validator;
   private final UserService userService;
   private final ConfirmationTokenService confirmationTokenService;
   private final EmailService emailService;
-  private final String link = "http://localhost:8080/api/auth/sign-up/confirm?token=";
 
+  @Transactional
   public String register(UserRegistrationRequest request) {
-    String email = request.getEmail();
-    if (!emailValidator.isValid(email)) {
-      throw new InvalidEmailException(email + " is not valid");
-    }
+    validator.validate(request);
     User user = new User(request, UserRole.USER);
     String token = userService.signUpUser(user);
-    String message = buildEmail(user.getFirstName(), user.getLastName(), link + token);
+    String message = buildEmail(user.getFirstName(), user.getLastName(), LINK + token);
     emailService.send(user.getEmail(), message);
     return token;
   }
@@ -41,13 +36,13 @@ public class RegistrationService {
   @Transactional
   public String confirm(String token) {
     ConfirmationToken confirmationToken = confirmationTokenService.getToken(token)
-        .orElseThrow(() -> new TokenAlreadyInUseException(token + " is already in use"));
+        .orElseThrow(() -> new AuthorizationException(token + " is already in use"));
     if (confirmationToken.getConfirmedAt() != null) {
-      throw new EmailAlreadyConfirmedException("email is already confirmed");
+      throw new AuthorizationException("email is already confirmed");
     }
     LocalDateTime expiresAt = confirmationToken.getExpiresAt();
     if (expiresAt.isBefore(LocalDateTime.now())) {
-      throw new ExpiredTokenException();
+      throw new AuthorizationException( token + " token is expired");
     }
     confirmationTokenService.setConfirmedAt(token);
     userService.enableUser(confirmationToken.getUser().getEmail());

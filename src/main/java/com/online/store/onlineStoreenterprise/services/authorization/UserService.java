@@ -3,22 +3,21 @@ package com.online.store.onlineStoreenterprise.services.authorization;
 import com.online.store.onlineStoreenterprise.dao.UserRepository;
 import com.online.store.onlineStoreenterprise.models.authorization.ConfirmationToken;
 import com.online.store.onlineStoreenterprise.models.authorization.User;
-import com.online.store.onlineStoreenterprise.validation.exceptions.EmailAlreadyTaken;
-import lombok.AllArgsConstructor;
+import com.online.store.onlineStoreenterprise.models.authorization.UserRole;
+import com.online.store.onlineStoreenterprise.validation.exceptions.AuthorizationException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService{
 
   private static final String USER_EMAIL_NOT_FOUND_MSG = "Email '%s' not found.";
 
@@ -35,6 +34,7 @@ public class UserService implements UserDetailsService {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
     this.confirmationTokenService = confirmationTokenService;
+    initDefaultUsers();
   }
 
   @Override
@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
 
     if (userExists) {
       //TODO: check if attributes are the same and if email not confirmed send confirmation message
-      throw new EmailAlreadyTaken(email + " is already taken");
+      throw new AuthorizationException("Email '" + email + "' is already taken");
     }
     String encodedPassword = passwordEncoder.encode(user.getPassword());
     user.setPassword(encodedPassword);
@@ -76,13 +76,29 @@ public class UserService implements UserDetailsService {
     repository.save(user);
   }
 
-//  public boolean isEmailRegistered(String email) {
-//    Optional<User> user = repository.findByEmail(email);
-//    return user.isPresent();
-//  }
-//
-//  public boolean isPasswordCorrect(String email) {
-//    Optional<User> user = repository.findByEmail(email);
-//    return user.isPresent();
-//  }
+  @PostConstruct
+  private void initDefaultUsers() {
+    Optional<User> defaultAdmin = repository.findByEmail("admin");
+    if (defaultAdmin.isEmpty()) {
+      setDefaultUser();
+    }
+  }
+
+  private void setDefaultUser() {
+    User user = createDefaultUser();
+    String token = signUpUser(user);
+    confirmationTokenService.setConfirmedAt(token);
+  }
+
+  private User createDefaultUser() {
+    User user = new User();
+    user.setFirstName("admin");
+    user.setLastName("admin");
+    user.setEmail("admin");
+    user.setPassword("admin");
+    user.setRole(UserRole.ADMIN);
+    user.setEnabled(true);
+    user.setLocked(false);
+    return user;
+  }
 }

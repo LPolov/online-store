@@ -1,6 +1,5 @@
 package com.online.store.onlineStoreenterprise.models.authorization;
 
-import com.online.store.onlineStoreenterprise.models.authorization.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +12,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "confirmation_tokens")
 public class ConfirmationToken {
 
   @Id

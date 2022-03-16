@@ -7,6 +7,10 @@ confirmation:
     validity:
       period:
         minutes: 15
+default:
+  user:
+    name: admin
+    password: admin
 spring:
   mvc:
     view:
@@ -18,12 +22,13 @@ spring:
     username: root
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL55Dialect
         format_sql: true
     show-sql: true
+    open-in-view: false
 
   mail:
     host: localhost

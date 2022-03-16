@@ -4,16 +4,13 @@ import com.online.store.onlineStoreenterprise.services.authorization.UserService
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
+import javax.sql.DataSource;
 
 @Configuration
 @AllArgsConstructor
@@ -22,6 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserService userService;
   private final BCryptPasswordEncoder passwordEncoder;
+  private final DataSource dataSource;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -35,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .loginPage("/api/auth/sign-in")
         .usernameParameter("email")
         .failureUrl("/api/auth/sign-in/error")
+        .defaultSuccessUrl("/api/home", true)
         .permitAll();
   }
 

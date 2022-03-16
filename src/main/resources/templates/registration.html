@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRegister').click(function () {
+                var user = {
+                    "firstName": $('#firstName').val(),
+                    "lastName": $('#lastName').val(),
+                    "email": $('#email').val(),
+                    "password": $('#password').val()
+
+                };
+                $.ajax({
+                    url:'http://localhost:8080/api/auth/sign-up',
+                    type:"POST",
+                    contentType:"application/json",
+                    dataType:"json",
+                    data:JSON.stringify(user),
+                    error: function (err) {
+                        let errorDiv = $('#errorMessage');
+                        errorDiv.css("display", "block")
+                        errorDiv.html(err.responseJSON.message);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h2>Online-store sign-up</h2>
+    <div id="errorMessage" class="alert alert-danger error" role="alert" style="display: none">
+    </div>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">First name:</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="firstName" placeholder="Enter first name" name="firstName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Last Name:</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="lastName" placeholder="Enter last name" name="lastName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email:</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="password">Password:</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="password" placeholder="Enter password" name="password">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success" id="btnRegister">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

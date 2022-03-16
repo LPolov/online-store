@@ -1,17 +1,16 @@
 package com.online.store.onlineStoreenterprise.validation.validators;
 
+import com.online.store.onlineStoreenterprise.validation.exceptions.AuthorizationException;
 import org.springframework.stereotype.Service;
 
-import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Service
-public class EmailValidator {
+public class EmailValidator implements Validator<String> {
 
-  public boolean isValid(String email) {
-    Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
-    Matcher matcher = pattern.matcher(email);
-    return matcher.matches();
+  private static final String EMAIL_REGEXP = "^[A-Za-z0-9+_.-]+@(.+)$";
+
+  public void validate(String email) {
+    if (!email.matches(EMAIL_REGEXP)) {
+      throw new AuthorizationException("Email '" + email + "' is not valid");
+    }
   }
 }
