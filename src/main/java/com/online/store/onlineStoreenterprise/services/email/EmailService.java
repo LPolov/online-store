@@ -7,7 +7,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -31,7 +30,7 @@ public class EmailService implements EmailSender{
       helper.setTo(to);
       helper.setSubject(EMAIL_SUBJECT);
       helper.setFrom(FROM);
-      //TODO: sender.send(mimeMessage);
+      sender.send(mimeMessage);
     } catch (MessagingException e) {
       LOGGER.error("Failed to send email", e);
       throw new IllegalStateException("Failed to send email");

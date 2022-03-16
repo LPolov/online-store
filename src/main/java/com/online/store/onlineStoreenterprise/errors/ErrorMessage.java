@@ -1,4 +1,4 @@
-package com.online.store.onlineStoreenterprise.handlers.errors;
+package com.online.store.onlineStoreenterprise.errors;
 
 import lombok.Getter;
 import lombok.Setter;

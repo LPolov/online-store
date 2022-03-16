@@ -1,6 +1,6 @@
 package com.online.store.onlineStoreenterprise.services.authorization;
 
-import com.online.store.onlineStoreenterprise.dto.UserLoginRequest;
+import com.online.store.onlineStoreenterprise.dto.LoginRequest;
 import com.online.store.onlineStoreenterprise.validation.exceptions.AuthorizationException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,11 +12,15 @@ public class LoginService {
 
   private final UserService userService;
 
-  public String login(UserLoginRequest request) {
+  public String login(LoginRequest request) {
     UserDetails userDetails = userService.loadUserByUsername(request.getEmail());
-    if (!userDetails.getPassword().equals(request.getPassword())) {
-      throw new AuthorizationException( request.getPassword() + " is not correct");
-    }
+    passwordMatches(userDetails.getPassword(), request.getPassword());
     return "home";
+  }
+
+  private void passwordMatches(String passwordFromDb, String passwordFromRequest) {
+    if (!passwordFromDb.equals(passwordFromRequest)) {
+      throw new AuthorizationException(passwordFromRequest + " is not correct");
+    }
   }
 }
