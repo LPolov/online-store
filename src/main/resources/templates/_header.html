@@ -1,0 +1,42 @@
+<div class="header-container" style="margin-bottom: 25px;"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Online Store</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <th:block sec:authorize="isAuthenticated()">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/api/products/}">Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/api/orders/}">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/api/cart/show}">My Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" th:utext="${#request.userPrincipal.name}"></a>
+            </li>
+          </th:block>
+          <th:block sec:authorize="!isAuthenticated()">
+            <li class="nav-item" style="float: right;">
+              <a class="nav-link" th:href="@{/api/auth/sign-in}">Login</a>
+            </li>
+          </th:block>
+
+        </ul>
+
+      </div>
+    </nav>
+
+
+</div>
