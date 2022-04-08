@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -62,6 +63,17 @@ public class OrderService {
 
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    public List<Order> getOrdersByUserId(UUID userId) {
+        return orderRepository.findAll()
+            .stream()
+            .filter(order -> isOrderBelongsToUser(order, userId))
+            .collect(Collectors.toList());
+    }
+
+    private boolean isOrderBelongsToUser(Order order, UUID userId) {
+        return order.getUser().getId().equals(userId);
     }
 
     public Order getOrderById(UUID id)

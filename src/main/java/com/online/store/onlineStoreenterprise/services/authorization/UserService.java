@@ -5,16 +5,18 @@ import com.online.store.onlineStoreenterprise.models.authorization.ConfirmationT
 import com.online.store.onlineStoreenterprise.models.authorization.User;
 import com.online.store.onlineStoreenterprise.models.authorization.UserRole;
 import com.online.store.onlineStoreenterprise.validation.exceptions.AuthorizationException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
 
   private static final String USER_EMAIL_NOT_FOUND_MSG = "Email '%s' not found.";
   private static final String DEFAULT_USER_DATA = "admin";
@@ -58,6 +60,12 @@ public class UserService implements UserDetailsService{
   public void enableUser(User user) {
     user.setEnabled(true);
     userRepository.save(user);
+  }
+
+  public User getAuthenticatedUserFromRequest(HttpServletRequest request) {
+    UsernamePasswordAuthenticationToken principal =
+        (UsernamePasswordAuthenticationToken) request.getUserPrincipal();
+    return (User) principal.getPrincipal();
   }
 
   @PostConstruct

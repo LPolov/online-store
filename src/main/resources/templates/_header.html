@@ -33,6 +33,12 @@
             </li>
           </th:block>
 
+          <th:block sec:authorize="isAuthenticated()">
+            <li class="nav-item" style="float: right;">
+              <a class="nav-link" th:href="@{/logout}">Logout</a>
+            </li>
+          </th:block>
+
         </ul>
 
       </div>
