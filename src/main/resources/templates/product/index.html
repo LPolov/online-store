@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -21,6 +23,7 @@
                     <th>Categories</th>
                     <th>Price</th>
                     <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -34,10 +37,16 @@
                         <a class="btn btn-info" th:href="@{/api/products/detail/{id}(id=${product.id})}">View</a>
                         <!--                    <a class="btn btn-danger" th:href="@{/devices/delete(id=${device.id})}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>-->
                     </td>
+                    <td>
+                        <a th:href="@{/api/cart/add/{id}(id=${product.id})}" class="btn btn-success">Add to Cart</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-            <p><a href="/api/products/add" class="btn btn-success">Add New Product</a></p>
+            <th:block sec:authorize="hasAuthority('ADMIN')">
+                <p><a href="/api/products/add" class="btn btn-success">Add New Product</a></p>
+            </th:block>
+
         </div>
     </div>
 

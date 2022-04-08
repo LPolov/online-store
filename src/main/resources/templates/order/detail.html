@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>Orders</title>
@@ -23,7 +25,9 @@
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Amount</th>
-                <th>Customer Name</th>
+                <th:block sec:authorize="hasAuthority('ADMIN')">
+                    <th>Customer Name</th>
+                </th:block>
             </tr>
             </thead>
             <tbody>
@@ -36,7 +40,9 @@
                 <td th:text="${orderItem.quantity}"></td>
                 <td th:text="${orderItem.price}"></td>
                 <td th:text="${orderItem.amount}"></td>
-                <td th:text="${order.user.firstName+' '+order.user.lastName}"></td>
+                <th:block sec:authorize="hasAuthority('ADMIN')">
+                    <td th:text="${order.user.firstName+' '+order.user.lastName}"></td>
+                </th:block>
             </tr>
             </tbody>
         </table>
