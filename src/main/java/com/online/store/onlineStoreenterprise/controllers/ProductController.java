@@ -80,7 +80,7 @@ public class ProductController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateDevice(@PathVariable("id") UUID id, UpdateProductRequest product, Model model, RedirectAttributes redirAttrs) {
+    public String updateProduct(@PathVariable("id") UUID id, UpdateProductRequest product, Model model, RedirectAttributes redirAttrs) {
         try {
             Product _product = productService.updateProduct(id, product);
             redirAttrs.addFlashAttribute("success", "Product updated successfully.");
@@ -91,7 +91,7 @@ public class ProductController {
     }
 
     @GetMapping("/delete")
-    public String deleteDevice(@RequestParam("id") UUID id, Model model, RedirectAttributes redirAttrs) {
+    public String deleteProduct(@RequestParam("id") UUID id, Model model, RedirectAttributes redirAttrs) {
         try {
             productService.deleteProduct(id);
             redirAttrs.addFlashAttribute("success", "Product deleted successfully.");
