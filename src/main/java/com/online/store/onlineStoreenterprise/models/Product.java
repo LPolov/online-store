@@ -1,6 +1,7 @@
 package com.online.store.onlineStoreenterprise.models;
 
 import com.online.store.onlineStoreenterprise.dto.SaveProductRequest;
+import com.online.store.onlineStoreenterprise.dto.UpdateProductRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,5 +38,14 @@ public class Product {
         price = saveProductRequest.getPrice();
         description = saveProductRequest.getDescription();
         sku = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
+    }
+
+    public Product(UpdateProductRequest updateProductRequest) {
+        brand = updateProductRequest.getBrand();
+        categories = updateProductRequest.getCategories();
+        name = updateProductRequest.getName();
+        stockQty = updateProductRequest.getStockQty();
+        price = updateProductRequest.getPrice();
+        description = updateProductRequest.getDescription();
     }
 }

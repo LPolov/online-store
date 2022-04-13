@@ -23,22 +23,24 @@
             <li class="nav-item">
               <a class="nav-link" th:href="@{/api/cart/show}">My Cart</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" th:utext="${#request.userPrincipal.name}"></a>
-            </li>
           </th:block>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
           <th:block sec:authorize="!isAuthenticated()">
-            <li class="nav-item" style="float: right;">
+            <li class="nav-item">
               <a class="nav-link" th:href="@{/api/auth/sign-in}">Login</a>
             </li>
           </th:block>
 
           <th:block sec:authorize="isAuthenticated()">
+            <li class="nav-item">
+              <a class="nav-link" href="#" th:utext="${#request.userPrincipal.name}"></a>
+            </li>
             <li class="nav-item" style="float: right;">
               <a class="nav-link" th:href="@{/logout}">Logout</a>
             </li>
           </th:block>
-
         </ul>
 
       </div>

@@ -33,7 +33,7 @@
                                     <h5 class="fw-normal mb-0" th:utext="${cartLineInfo.quantity}"></h5>
                                 </div>
                                 <div style="width: 80px;">
-                                    <h5 class="mb-0"> $<span th:utext="${#numbers.formatDecimal(cartLineInfo.amount,3,2,'POINT')}"></span></h5>
+                                    <h5 class="mb-0"> $<span th:utext="${#numbers.formatDecimal(cartLineInfo.amount,0,'COMMA',2,'POINT')}"></span></h5>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                             <span th:utext="${myCart.quantityTotal}"></span>
                         </li>
                         <li class="list-group-item">
-                            <b>Total: </b>  $<span  th:utext="${#numbers.formatDecimal(myCart.amountTotal,3,2,'POINT')}"></span>
+                            <b>Total: </b>  $<span  th:utext="${#numbers.formatDecimal(myCart.amountTotal,0,'COMMA',2,'POINT')}"></span>
                         </li>
                     </ul>
                 </div>
