@@ -19,14 +19,16 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    @Autowired
     OrderRepository orderRepository;
-
-    @Autowired
     OrderItemService orderItemService;
+    ProductService productService;
 
     @Autowired
-    ProductService productService;
+    public OrderService(OrderRepository orderRepository, OrderItemService orderItemService, ProductService productService) {
+        this.orderRepository = orderRepository;
+        this.orderItemService = orderItemService;
+        this.productService = productService;
+    }
 
     @Transactional()
     public Order saveOrder(CartInfo cartInfo) {
@@ -38,9 +40,7 @@ public class OrderService {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         order.setUser(user);
-
         Order _order = orderRepository.save(order);
-
         List<CartLineInfo> lines = cartInfo.getCartLines();
 
         for (CartLineInfo line : lines) {
@@ -59,10 +59,6 @@ public class OrderService {
 
         cartInfo.setOrderNum(orderNum);
         return _order;
-    }
-
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
     }
 
     public List<Order> getOrdersByUserId(UUID userId) {

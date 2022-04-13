@@ -18,11 +18,14 @@ import java.util.UUID;
 @RequestMapping("/api/cart")
 public class CartController {
 
-    @Autowired
     ProductService productService;
+    OrderService orderService;
 
     @Autowired
-    OrderService orderService;
+    public CartController(ProductService productService, OrderService orderService) {
+        this.productService = productService;
+        this.orderService = orderService;
+    }
 
     @GetMapping("/show")
     public String shoppingCart(HttpServletRequest request, Model model) {
@@ -33,30 +36,22 @@ public class CartController {
     }
 
     @GetMapping("/add/{id}")
-    public String showCart(HttpServletRequest request, Model model,
-                                     @PathVariable("id") UUID id) {
-
-
+    public String showCart(HttpServletRequest request,
+                           Model model,
+                           @PathVariable("id") UUID id) {
         Product product = productService.getProductById(id);
-
         if (product != null) {
-
             CartInfo cartInfo = Util.getCartInSession(request);
-
             ProductInfo productInfo = new ProductInfo(product);
-
             cartInfo.addProduct(productInfo, 1);
         }
-
         return "redirect:/api/cart/show";
     }
 
     @PostMapping("/update-qty")
     public String shoppingCartUpdateQty(CartInfo cartForm, HttpServletRequest request) {
-
         CartInfo cartInfo = Util.getCartInSession(request);
         cartInfo.updateQuantity(cartForm);
-
         return "redirect:/api/cart/show";
     }
 
@@ -64,13 +59,9 @@ public class CartController {
     public String removeProductHandler(@PathVariable("id") UUID id, HttpServletRequest request, Model model) {
         Product product = productService.getProductById(id);
         if (product != null) {
-
             CartInfo cartInfo = Util.getCartInSession(request);
-
             ProductInfo productInfo = new ProductInfo(product);
-
             cartInfo.removeProduct(productInfo);
-
         }
         return "redirect:/api/cart/show";
     }
@@ -78,43 +69,32 @@ public class CartController {
     @GetMapping("/confirm-review")
     public String shoppingCartConfirmationReview(HttpServletRequest request, Model model) {
         CartInfo cartInfo = Util.getCartInSession(request);
-
         if (cartInfo.isEmpty()) {
             return "redirect:/api/cart/show";
         }
-
         model.addAttribute("myCart", cartInfo);
-
         return "cart/confirmation-review";
     }
 
     @PostMapping("/order-confirm")
     public String orderConfirm(HttpServletRequest request, Model model) {
         CartInfo cartInfo = Util.getCartInSession(request);
-
         if (cartInfo.isEmpty()) {
             return "redirect:/api/cart/show";
         }
-
         try {
             orderService.saveOrder(cartInfo);
         } catch (Exception e) {
             return "cart/confirmation-review";
         }
-
-        // Remove Cart from Session.
         Util.removeCartInSession(request);
-
-        // Store last cart.
         Util.storeLastOrderedCartInSession(request, cartInfo);
-
         return "redirect:/api/cart/finalized";
     }
 
     @GetMapping("/finalized")
     public String shoppingCartFinalize(HttpServletRequest request, Model model) {
         CartInfo lastOrderedCart = Util.getLastOrderedCartInSession(request);
-
         if (lastOrderedCart == null) {
             return "redirect:/api/cart/show";
         }

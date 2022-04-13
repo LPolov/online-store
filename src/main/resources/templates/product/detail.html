@@ -38,7 +38,9 @@
                         <td th:text="${product.description}"></td>
                     </tr>
                 </table>
-                <p><a th:href="@{/api/cart/add/{id}(id=${product.id})}" class="btn btn-success">Add to Cart</a></p>
+                <th:block sec:authorize="hasAuthority('USER')">
+                    <p><a th:href="@{/api/cart/add/{id}(id=${product.id})}" class="btn btn-success">Add to Cart</a></p>
+                </th:block>
             </div>
         </div>
     </div>

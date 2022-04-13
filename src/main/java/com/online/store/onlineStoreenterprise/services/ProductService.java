@@ -6,7 +6,6 @@ import com.online.store.onlineStoreenterprise.dto.UpdateProductRequest;
 import com.online.store.onlineStoreenterprise.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -16,8 +15,12 @@ import java.util.UUID;
 @Service
 public class ProductService {
 
-    @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public Product getProductById(UUID id) {
         return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found"));
